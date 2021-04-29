@@ -13,6 +13,9 @@
     "onView:request-it.home"
   ],
   "main": "./dist/extension.js",
+  "extensionKind": [
+    "ui"
+  ],
   "contributes": {
     "viewsContainers": {
       "activitybar": [
