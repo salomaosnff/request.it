@@ -1,8 +1,7 @@
 import * as vscode from "vscode";
 import { WebviewViewProvider } from "vscode";
 import { join } from "path";
-import { readFileSync } from "fs";
-import { get } from "http";
+
 class RequestItHomeProvider implements WebviewViewProvider {
   constructor(public uri: vscode.Uri) {}
 
