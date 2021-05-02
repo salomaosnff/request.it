@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import { WebviewViewProvider } from "vscode";
 import { join } from "path";
+import { CollectionExplorer } from "./collection-explorer";
 
 class RequestItHomeProvider implements WebviewViewProvider {
   constructor(public uri: vscode.Uri) {}
@@ -92,11 +93,23 @@ class RequestItHomeProvider implements WebviewViewProvider {
 }
 
 export function activate(context: vscode.ExtensionContext) {
-  vscode.window.registerWebviewViewProvider(
-    "request-it.home",
-    new RequestItHomeProvider(
-      vscode.Uri.file(join(context.extensionPath, "www"))
-    )
+  // vscode.window.registerWebviewViewProvider(
+  //   "request-it.home",
+  //   new RequestItHomeProvider(
+  //     vscode.Uri.file(join(context.extensionPath, "www"))
+  //   )
+  // );
+
+  context.subscriptions.push(
+    vscode.window.registerTreeDataProvider('request-it.requests', new CollectionExplorer()),
+    vscode.commands.registerCommand('request-it.create-request', () => {
+      vscode.window.createWebviewPanel('request-it.requests', 'Request', {
+        viewColumn: vscode.ViewColumn.One
+      });
+      vscode.window.createWebviewPanel('request-it.requests', 'Response', {
+        viewColumn: vscode.ViewColumn.Two
+      });
+    })
   );
 }
 

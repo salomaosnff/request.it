@@ -10,13 +10,33 @@
     "Other"
   ],
   "activationEvents": [
-    "onView:request-it.home"
+    "onView:request-it.requests",
+    "onView:request-it.history",
+    "onCustomEditor:request-it.editor"
   ],
   "main": "./dist/extension.js",
   "extensionKind": [
     "ui"
   ],
   "contributes": {
+    "commands": [
+      {
+        "title": "Refresh",
+        "command": "request-it.refresh",
+        "icon": {
+          "dark": "resources/dark/refresh.svg",
+          "light": "resources/light/refresh.svg"
+        }
+      },
+      {
+        "title": "New Request",
+        "command": "request-it.create-request",
+        "icon": {
+          "dark": "resources/dark/add.svg",
+          "light": "resources/light/add.svg"
+        }
+      }
+    ],
     "viewsContainers": {
       "activitybar": [
         {
@@ -29,13 +49,48 @@
     "views": {
       "request-it": [
         {
-          "id": "request-it.home",
-          "type": "webview",
-          "name": "Request It",
-          "icon": "resources/icon.png"
+          "id": "request-it.requests",
+          "type": "tree",
+          "name": "Requests"
+        },
+        {
+          "id": "request-it.history",
+          "type": "tree",
+          "name": "History"
+        },
+        {
+          "id": "request-it.enviroment",
+          "type": "tree",
+          "name": "Enviroment"
         }
       ]
-    }
+    },
+    "menus": {
+      "view/title": [
+        {
+          "when": "view == request-it.requests",
+          "command": "request-it.refresh",
+          "group": "navigation"
+        },
+        {
+          "when": "view == request-it.requests",
+          "command": "request-it.create-request",
+          "group": "navigation"
+        }
+      ]
+    },
+    "customEditors": [
+      {
+        "viewType": "request-it.editor",
+        "displayName": "Request.it Editor",
+        "selector": [
+          {
+            "filenamePattern": ".request-it/requests/rooms/browser.json"
+          }
+        ],
+        "priority": "default"
+      }
+    ]
   },
   "scripts": {
     "vscode:prepublish": "yarn run package",

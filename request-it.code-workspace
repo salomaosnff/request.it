@@ -1,0 +1,15 @@
+{
+  "folders": [
+    {
+      "name": "Extension",
+      "path": "."
+    },
+    {
+      "name": "Webview",
+      "path": "request.it"
+    }
+  ],
+  "settings": {
+    "typescript.tsc.autoDetect": "off"
+  }
+}
