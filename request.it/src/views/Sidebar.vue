@@ -15,7 +15,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import RButton from "@/components/button.vue";
-import RTabLink from "@/components/TabLink.vue";
+import RTabLink from "@/components/tab-link.vue";
 
 @Component({
   components: { RButton, RTabLink },

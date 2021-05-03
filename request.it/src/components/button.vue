@@ -9,12 +9,12 @@
 
 <style>
 .r-button {
+  display: inline-block;
   background: var(--vscode-button-background);
   color: var(--vscode-button-foreground);
   border: none;
   outline: none;
   padding: 0.4em 1em;
-  margin: 0.25em;
   cursor: pointer;
 }
 

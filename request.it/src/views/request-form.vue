@@ -2,7 +2,7 @@
   <div>
     <h1 contenteditable>Request</h1>
     <form action="" class="r-form">
-      <select>
+      <select class="r-input">
         <option>GET</option>
         <option>POST</option>
         <option>PUT</option>
@@ -10,12 +10,12 @@
         <option>DELETE</option>
       </select>
 
-      <input type="url" />
+      <r-input type="url" />
 
       <r-button>Send</r-button>
     </form>
 
-    <div>
+    <div class="r-tab-group">
       <r-tab to="/request/body"> Body </r-tab>
       <r-tab to="/request/auth"> Auth </r-tab>
       <r-tab to="/request/query"> Query </r-tab>
@@ -30,28 +30,31 @@
 <style>
 .r-form {
   display: flex;
+  height: calc(1.618em * 1.618);
+  margin-bottom: 0.25em;
 }
 
 .r-form > select {
-  flex: 1;
+  flex: 0 auto;
 }
 
 .r-form > input {
-  flex: 3;
+  flex: 1;
 }
 
-.r-form > r-button {
-  flex: 1;
+.r-form > .r-button {
+  flex: 0 auto;
 }
 </style>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import RInput from "@/components/input.vue";
 import RButton from "@/components/button.vue";
-import RTab from "@/components/TabLink.vue";
+import RTab from "@/components/tab-link.vue";
 
 @Component({
-  components: { RButton, RTab },
+  components: { RInput, RButton, RTab },
 })
 export default class RequestForm extends Vue {}
 </script>

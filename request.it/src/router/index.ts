@@ -2,11 +2,11 @@ import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
 import Sidebar from "../views/Sidebar.vue";
 import RequestForm from "../views/request-form.vue";
-import RequestFormBody from "../views/request-form.vue";
-import RequestFormAuth from "../views/request-form.vue";
-import RequestFormQuery from "../views/request-form.vue";
-import RequestFormHeader from "../views/request-form.vue";
-import RequestFormDocs from "../views/request-form.vue";
+import RequestFormBody from "../views/request/Body.vue";
+import RequestFormAuth from "../views/request/Auth.vue";
+import RequestFormQuery from "../views/request/Query.vue";
+import RequestFormHeader from "../views/request/Header.vue";
+import RequestFormDocs from "../views/request/Docs.vue";
 import Response from "../views/response.vue";
 
 Vue.use(VueRouter);
