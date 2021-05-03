@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "start": "vue-cli-service serve",
     "serve": "rm -rf ../www && vue-cli-service build --watch --dest ../www/",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
