@@ -3,8 +3,19 @@ import { WebviewViewProvider } from "vscode";
 import { join } from "path";
 import { CollectionExplorer } from "./collection-explorer";
 import { getWebviewContent } from "./webview";
+import { HttpClient } from "./Agent";
 
 export function activate(context: vscode.ExtensionContext) {
+  const client = new HttpClient();
+
+  client.request({
+    vars: {},
+    url: 'https://api.pubby.club/rooms/browser',
+    method: 'GET',
+    name: '',
+  }).then(res => {
+    console.log(res.toString('utf8'));
+  });
   // vscode.window.registerWebviewViewProvider(
   //   "request-it.home",
   //   new RequestItHomeProvider(
