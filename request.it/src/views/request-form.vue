@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1 contenteditable>Request</h1>
-    <form action="" class="r-form">
+    <form class="r-form" @submit.prevent="onSendRequest">
       <select class="r-input">
         <option>GET</option>
         <option>POST</option>
@@ -49,6 +49,8 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import { Command } from "@/lib/command";
+import { Request } from "@/lib/request-file";
 import RInput from "@/components/input.vue";
 import RButton from "@/components/button.vue";
 import RTab from "@/components/tab-link.vue";
@@ -56,5 +58,14 @@ import RTab from "@/components/tab-link.vue";
 @Component({
   components: { RInput, RButton, RTab },
 })
-export default class RequestForm extends Vue {}
+export default class RequestForm extends Vue {
+  public onSendRequest(): void {
+    Command.call<Request>("request", {
+      url: "https://api.pubby.club/rooms/browser",
+      method: "GET",
+      headers: {},
+      query: {},
+    });
+  }
+}
 </script>

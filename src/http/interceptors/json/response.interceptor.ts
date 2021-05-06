@@ -12,7 +12,7 @@ export class JSONResponseInterceptor implements HttpInterceptor<Response> {
     }
 
     async handler(response: Response) {
-        response.body = JSON.stringify(response.body.toString());
+        response.data = JSON.parse(response.body.toString());
         return response;
     }
 }

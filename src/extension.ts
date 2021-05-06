@@ -6,6 +6,9 @@ import { getWebviewContent } from "./webview";
 import { HttpClient } from "./http/Agent";
 import { JSONRequestInterceptor } from "./http/interceptors/json/request.interceptor";
 import { JSONResponseInterceptor } from "./http/interceptors/json/response.interceptor";
+import { Command } from "./types/command";
+import { CommandRegistry } from "./command-registry";
+import { Request } from "./types/request-file";
 
 export function activate(context: vscode.ExtensionContext) {
   const client = new HttpClient();
@@ -13,14 +16,6 @@ export function activate(context: vscode.ExtensionContext) {
   client.interceptors.request.use(new JSONRequestInterceptor());
   client.interceptors.response.use(new JSONResponseInterceptor());
 
-  client.request({
-    url: 'https://api.pubby.club/rooms/browser',
-    method: 'GET',
-    headers: {},
-    query: {}
-  }).then(res => {
-    console.log(res);
-  });
   // vscode.window.registerWebviewViewProvider(
   //   "request-it.home",
   //   new RequestItHomeProvider(
@@ -47,6 +42,18 @@ export function activate(context: vscode.ExtensionContext) {
           enableCommandUris: true,
         }
       );
+
+      const commandRegistry = new CommandRegistry();
+      commandRegistry.commands.set("request", (request: Request) => {
+        client.request(request).then((res) => {
+          console.log("postMessage webview");
+          response.webview.postMessage({ command: "a" });
+        });
+      });
+
+      request.webview.onDidReceiveMessage((t: Command<any>) => {
+        commandRegistry.call<any>(t);
+      });
 
       const response = vscode.window.createWebviewPanel(
         "request-it.requests",
