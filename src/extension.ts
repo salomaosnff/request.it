@@ -3,18 +3,23 @@ import { WebviewViewProvider } from "vscode";
 import { join } from "path";
 import { CollectionExplorer } from "./collection-explorer";
 import { getWebviewContent } from "./webview";
-import { HttpClient } from "./Agent";
+import { HttpClient } from "./http/Agent";
+import { JSONRequestInterceptor } from "./http/interceptors/json/request.interceptor";
+import { JSONResponseInterceptor } from "./http/interceptors/json/response.interceptor";
 
 export function activate(context: vscode.ExtensionContext) {
   const client = new HttpClient();
 
+  client.interceptors.request.use(new JSONRequestInterceptor());
+  client.interceptors.response.use(new JSONResponseInterceptor());
+
   client.request({
-    vars: {},
     url: 'https://api.pubby.club/rooms/browser',
     method: 'GET',
-    name: '',
+    headers: {},
+    query: {}
   }).then(res => {
-    console.log(res.toString('utf8'));
+    console.log(res);
   });
   // vscode.window.registerWebviewViewProvider(
   //   "request-it.home",
