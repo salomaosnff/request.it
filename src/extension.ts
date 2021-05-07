@@ -46,8 +46,7 @@ export function activate(context: vscode.ExtensionContext) {
       const commandRegistry = new CommandRegistry();
       commandRegistry.commands.set("request", (request: Request) => {
         client.request(request).then((res) => {
-          console.log("postMessage webview");
-          response.webview.postMessage({ command: "a" });
+          response.webview.postMessage({ name: "response", args: res });
         });
       });
 

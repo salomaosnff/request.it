@@ -29,12 +29,6 @@ export function getWebviewContent(uri: Uri, route: string) {
         <script type="text/javascript" nonce="${nonce}">
           const VUE_initialState = "${route}";
 					window.vscodeAcquireVsCodeApi = acquireVsCodeApi();
-
-					alert('aaa');
-
-					window.addEventListener("message", () => {
-						console.log("evento message");
-					});
         </script>
 			</head>
 			<body>
