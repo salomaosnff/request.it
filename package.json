@@ -10,9 +10,7 @@
     "Other"
   ],
   "activationEvents": [
-    "onView:request-it.requests",
-    "onView:request-it.history",
-    "onCustomEditor:request-it.editor"
+    "onCommand:request-it.create-request"
   ],
   "main": "./dist/extension.js",
   "extensionKind": [
