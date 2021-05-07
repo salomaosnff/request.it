@@ -18,15 +18,20 @@ export function activate(context: vscode.ExtensionContext) {
   client.interceptors.response.use(new JSONResponseInterceptor());
   client.interceptors.request.use(new VarsRequestInterceptor());
 
-  // vscode.window.registerWebviewViewProvider(
-  //   "request-it.home",
-  //   new RequestItHomeProvider(
-  //     vscode.Uri.file(join(context.extensionPath, "www"))
-  //   )
-  // );
-
   const assetsRoot = vscode.Uri.file(join(context.extensionPath, "www"));
   const commands = new CommandRegistry();
+
+  commands.add("request", (request: Request) => {
+    vscode.window.withProgress({
+      location: vscode.ProgressLocation.Window,
+      title: 'Requisitando...'
+  }, async () => {
+      const res = await client.request(request);
+      SingletonContainer
+          .get(ResponseView).webview
+          .postMessage({ name: "response", args: res });
+    });
+  });
 
   context.subscriptions.push(
     vscode.window.registerTreeDataProvider(
@@ -34,17 +39,8 @@ export function activate(context: vscode.ExtensionContext) {
       new CollectionExplorer()
     ),
     vscode.commands.registerCommand("request-it.create-request", () => {
-
-      commands.add("request", (request: Request) => {
-        client.request(request).then((res) => {
-          response.webview.postMessage({ name: "response", args: res });
-        });
-      });
-
-      const request = SingletonContainer.get(RequestView, { assetsRoot, commands });
-      const response = SingletonContainer.get(ResponseView, { assetsRoot, commands });
-
-      context.subscriptions.push(request, response);
+      SingletonContainer.get(RequestView, { assetsRoot, commands, context });
+      SingletonContainer.get(ResponseView, { assetsRoot, commands, context });
     })
   );
 }

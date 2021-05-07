@@ -6,6 +6,7 @@ import { Singleton } from './SingletonContainer';
 
 export interface RequestViewOptions {
     readonly assetsRoot: vscode.Uri,
+    readonly context: vscode.ExtensionContext
     readonly commands: CommandRegistry
 }
 
@@ -29,10 +30,13 @@ export class RequestView implements Singleton<vscode.WebviewPanel, RequestViewOp
 
         panel.webview.onDidReceiveMessage((t: Command<any>) => opts.commands.call<any>(t));
         panel.webview.html = getWebviewContent(opts.assetsRoot, "/request");
-        panel.onDidDispose(() => {
+        
+        const onDispose = panel.onDidDispose(() => {
             this.value = undefined;
             this.shouldUpdate = true;
         });
+
+        opts.context.subscriptions.push(panel, onDispose);
 
         return panel;
     }

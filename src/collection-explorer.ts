@@ -1,7 +1,8 @@
 import { readFileSync } from 'fs';
-import { dirname, resolve } from 'path';
-import { FileType, RelativePattern, TreeItemCollapsibleState, workspace, WorkspaceFolder } from 'vscode';
-import { Event, Hover, ProviderResult, TreeDataProvider, TreeItem, Uri, EventEmitter } from 'vscode';
+import { existsSync } from 'fs';
+import { dirname, } from 'path';
+import { FileType, RelativePattern, TreeItemCollapsibleState, workspace } from 'vscode';
+import { TreeDataProvider, TreeItem, Uri, EventEmitter } from 'vscode';
 
 export class CollectionItem extends TreeItem {
     data: any;
@@ -74,7 +75,7 @@ export class CollectionExplorer implements TreeDataProvider<CollectionItem> {
             this.tree.clear();
         }
     
-        const res = await workspace.fs.readDirectory(dir);
+        const res = existsSync(dir.fsPath) ? await workspace.fs.readDirectory(dir) : [];
         const items = res.map(([filename, type]) => {
             const uri = Uri.joinPath(dir, filename);
             const item = new CollectionItem(uri, type);

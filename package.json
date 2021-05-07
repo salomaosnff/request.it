@@ -10,7 +10,8 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:request-it.create-request"
+    "onCommand:request-it.create-request",
+    "onView:request-it.requests"
   ],
   "main": "./dist/extension.js",
   "extensionKind": [

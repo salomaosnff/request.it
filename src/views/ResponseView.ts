@@ -6,7 +6,8 @@ import { Singleton } from './SingletonContainer';
 
 export interface ResponseViewOptions {
     readonly assetsRoot: vscode.Uri,
-    readonly commands: CommandRegistry
+    readonly commands: CommandRegistry,
+    readonly context: vscode.ExtensionContext
 }
 
 export class ResponseView implements Singleton<vscode.WebviewPanel, ResponseViewOptions>  {
@@ -30,10 +31,12 @@ export class ResponseView implements Singleton<vscode.WebviewPanel, ResponseView
         panel.webview.onDidReceiveMessage((t: Command<any>) => opts.commands.call<any>(t));
         panel.webview.html = getWebviewContent(opts.assetsRoot, "/response");
 
-        panel.onDidDispose(() => {
+        const onDispose = panel.onDidDispose(() => {
             this.value = undefined;
             this.shouldUpdate = true;
         });
+
+        opts.context.subscriptions.push(panel, onDispose);
 
         return panel;
     }
