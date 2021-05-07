@@ -1,5 +1,4 @@
 import * as vscode from "vscode";
-import { WebviewViewProvider } from "vscode";
 import { join } from "path";
 import { CollectionExplorer } from "./collection-explorer";
 import { getWebviewContent } from "./webview";
@@ -9,12 +8,14 @@ import { JSONResponseInterceptor } from "./http/interceptors/json/response.inter
 import { Command } from "./types/command";
 import { CommandRegistry } from "./command-registry";
 import { Request } from "./types/request-file";
+import { VarsRequestInterceptor } from "./http/interceptors/vars/request.interceptor";
 
 export function activate(context: vscode.ExtensionContext) {
   const client = new HttpClient();
 
   client.interceptors.request.use(new JSONRequestInterceptor());
   client.interceptors.response.use(new JSONResponseInterceptor());
+  client.interceptors.request.use(new VarsRequestInterceptor());
 
   // vscode.window.registerWebviewViewProvider(
   //   "request-it.home",
@@ -44,6 +45,7 @@ export function activate(context: vscode.ExtensionContext) {
       );
 
       const commandRegistry = new CommandRegistry();
+
       commandRegistry.commands.set("request", (request: Request) => {
         client.request(request).then((res) => {
           console.log("postMessage webview");
