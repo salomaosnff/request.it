@@ -25,6 +25,7 @@ export interface Request {
   timeout?: number;
   contentType?: ContentType;
   body?: any;
+  vars?: any;
 }
 
 export interface RequestFile extends Request {

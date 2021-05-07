@@ -61,10 +61,13 @@ import RTab from "@/components/tab-link.vue";
 export default class RequestForm extends Vue {
   public onSendRequest(): void {
     Command.call<Request>("request", {
-      url: "https://api.pubby.club/rooms/browser",
+      url: "{{baseUrl}}/rooms/browser",
       method: "GET",
       headers: {},
       query: {},
+      vars: {
+        baseUrl: "https://api.pubby.club",
+      },
     });
   }
 }

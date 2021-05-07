@@ -15,7 +15,7 @@ export class VarsRequestInterceptor implements HttpInterceptor<Request> {
     parse(str: string, vars?: Record<string, any>) {
         if (vars === undefined) {return str;}
 
-        return str.replace(/\{\{(\s*.*?\s*\}\})/gmi, (_, name: string) => {
+        return str.replace(/\{\{(\s*.*?\s*)\}\}/gm, (_, name: string) => {
             const key = name.trim();
             const value = vars[key];
 
