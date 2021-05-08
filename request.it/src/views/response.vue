@@ -1,13 +1,13 @@
 <template>
   <div class="r-response">
     <h1 class="r-response__title">Response</h1>
-
-    <r-code-mirror
-      v-if="response"
-      class="r-response__editor"
-      :mode="responseType"
-      :value="responseString"
-    />
+    <div class="r-tab-group">
+      <r-tab to="/response/body"> Body </r-tab>
+      <r-tab to="/response/header"> Headers </r-tab>
+    </div>
+    <div class="r-response__content">
+      <router-view :response="response"></router-view>
+    </div>
   </div>
 </template>
 
@@ -18,13 +18,9 @@
   height: 100%;
 }
 
-.r-response__editor {
+.r-response__content {
   display: flex;
   flex-direction: column;
-  flex: 1;
-}
-
-.r-response__editor .CodeMirror {
   flex: 1;
 }
 </style>
@@ -33,10 +29,13 @@
 import { Component, Vue } from "vue-property-decorator";
 import { Response } from "@/lib/response";
 import RCodeMirror from '@/components/codemirror.vue'
+import RTab from "@/components/tab-link.vue";
+
 
 @Component({
   components: {
-    RCodeMirror
+    RCodeMirror,
+    RTab
   }
 })
 export default class RResponse extends Vue {
