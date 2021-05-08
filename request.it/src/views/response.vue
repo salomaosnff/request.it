@@ -2,12 +2,16 @@
   <div class="r-response">
     <h1 class="r-response__title">Response</h1>
 
-    <r-editor
-      class="r-response__editor"
-      v-if="response"
-      :value="responseString"
-      :language="responseType"
-    ></r-editor>
+    <div v-if="response">
+      <h4>Status: {{ response.status }}</h4>
+      <h4>Status Text: {{ response.statusText }}</h4>
+
+      <highlightjs
+        class="r-response__editor"
+        :language="responseType"
+        :code="responseString"
+      />
+    </div>
   </div>
 </template>
 
@@ -26,14 +30,8 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { Response } from "@/lib/response";
-import REditor from "@/components/monaco.vue";
-import * as monaco from "monaco-editor";
 
-@Component({
-  components: {
-    REditor,
-  },
-})
+@Component
 export default class RResponse extends Vue {
   public response: Response | null = null;
 

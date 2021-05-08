@@ -3,6 +3,8 @@ import App from "./App.vue";
 import { CommandRegistry } from "./lib/command-registry";
 import router from "./router";
 import store from "./store";
+import hljs from "highlight.js";
+import "highlight.js/styles/vs2015.css";
 
 Vue.config.productionTip = false;
 
@@ -13,6 +15,8 @@ Vue.mixin({
     $commands: () => registry,
   },
 });
+
+Vue.use(hljs.vuePlugin);
 
 window.addEventListener("message", (e) => {
   registry.call(e.data);

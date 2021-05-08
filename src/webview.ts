@@ -11,6 +11,7 @@ function getNonce() {
 }
 
 export function getWebviewContent(uri: Uri, route: string) {
+  // <meta http-equiv="refresh" content="2;url=http://localhost:8080" />
   const nonce = getNonce();
 
   return `
@@ -40,5 +41,5 @@ export function getWebviewContent(uri: Uri, route: string) {
 				<script type="text/javascript" nonce="${nonce}" src="js/app.js"></script>
 			</body>
 		</html>		
-	`;
+		`;
 }

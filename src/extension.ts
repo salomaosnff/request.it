@@ -22,15 +22,18 @@ export function activate(context: vscode.ExtensionContext) {
   const commands = new CommandRegistry();
 
   commands.add("request", (request: Request) => {
-    vscode.window.withProgress({
-      location: vscode.ProgressLocation.Window,
-      title: 'Requisitando...'
-  }, async () => {
-      const res = await client.request(request);
-      SingletonContainer
-          .get(ResponseView).webview
-          .postMessage({ name: "response", args: res });
-    });
+    vscode.window.withProgress(
+      {
+        location: vscode.ProgressLocation.Window,
+        title: "Requisitando...",
+      },
+      async () => {
+        const res = await client.request(request);
+        const responsePanel = SingletonContainer.get(ResponseView);
+        responsePanel.reveal(vscode.ViewColumn.Two);
+        responsePanel.webview.postMessage({ name: "response", args: res });
+      }
+    );
   });
 
   context.subscriptions.push(
