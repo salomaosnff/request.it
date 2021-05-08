@@ -28,8 +28,9 @@ export function activate(context: vscode.ExtensionContext) {
         title: "Requisitando...",
       },
       async () => {
-        const res = await client.request(request);
         const responsePanel = SingletonContainer.get(ResponseView);
+        const res = await client.request(request);
+
         responsePanel.reveal(vscode.ViewColumn.Two);
         responsePanel.webview.postMessage({ name: "response", args: res });
       }
@@ -43,7 +44,7 @@ export function activate(context: vscode.ExtensionContext) {
     ),
     vscode.commands.registerCommand("request-it.create-request", () => {
       SingletonContainer.get(RequestView, { assetsRoot, commands, context });
-      SingletonContainer.get(ResponseView, { assetsRoot, commands, context });
+      SingletonContainer.set(ResponseView, { assetsRoot, commands, context });
     })
   );
 }

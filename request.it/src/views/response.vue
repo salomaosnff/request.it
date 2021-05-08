@@ -2,16 +2,12 @@
   <div class="r-response">
     <h1 class="r-response__title">Response</h1>
 
-    <div v-if="response">
-      <h4>Status: {{ response.status }}</h4>
-      <h4>Status Text: {{ response.statusText }}</h4>
-
-      <highlightjs
-        class="r-response__editor"
-        :language="responseType"
-        :code="responseString"
-      />
-    </div>
+    <r-code-mirror
+      v-if="response"
+      class="r-response__editor"
+      :mode="responseType"
+      :value="responseString"
+    />
   </div>
 </template>
 
@@ -22,7 +18,13 @@
   height: 100%;
 }
 
-.r-response .r-response__editor {
+.r-response__editor {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.r-response__editor .CodeMirror {
   flex: 1;
 }
 </style>
@@ -30,8 +32,13 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { Response } from "@/lib/response";
+import RCodeMirror from '@/components/codemirror.vue'
 
-@Component
+@Component({
+  components: {
+    RCodeMirror
+  }
+})
 export default class RResponse extends Vue {
   public response: Response | null = null;
 

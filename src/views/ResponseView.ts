@@ -25,6 +25,7 @@ export class ResponseView implements Singleton<vscode.WebviewPanel, ResponseView
             {
                 enableScripts: true,
                 enableCommandUris: true,
+                localResourceRoots: [opts.assetsRoot]
             }
         );
 
