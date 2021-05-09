@@ -2,15 +2,15 @@
   <div>
     <h1 contenteditable>Request</h1>
     <form class="r-form" @submit.prevent="onSendRequest">
-      <select class="r-input">
-        <option>GET</option>
-        <option>POST</option>
-        <option>PUT</option>
-        <option>PATCH</option>
-        <option>DELETE</option>
+      <select class="r-input" v-model="request.method">
+        <option value="GET">GET</option>
+        <option value="POST">POST</option>
+        <option value="PUT">PUT</option>
+        <option value="PATCH">PATCH</option>
+        <option value="DELETE">DELETE</option>
       </select>
 
-      <r-input type="url" />
+      <r-input type="url" v-model="request.url" />
 
       <r-button>Send</r-button>
     </form>
@@ -50,7 +50,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { Command } from "@/lib/command";
-import { Request } from "@/lib/request-file";
+import { Request, RequestMethod } from "@/lib/request-file";
 import RInput from "@/components/input.vue";
 import RButton from "@/components/button.vue";
 import RTab from "@/components/tab-link.vue";
@@ -59,16 +59,17 @@ import RTab from "@/components/tab-link.vue";
   components: { RInput, RButton, RTab },
 })
 export default class RequestForm extends Vue {
+  public request: Request = {
+    url: "https://api.pubby.club/rooms/browser",
+    method: "GET",
+    headers: {},
+    query: {},
+    followRedirects: true,
+    maxRedirects: 1,
+  };
+
   public onSendRequest(): void {
-    Command.call<Request>("request", {
-      url: "{{baseUrl}}/rooms/browser",
-      method: "GET",
-      headers: {},
-      query: {},
-      vars: {
-        baseUrl: "https://api.pubby.club",
-      },
-    });
+    Command.call<Request>("request", this.request);
   }
 }
 </script>

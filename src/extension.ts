@@ -3,20 +3,24 @@ import { join } from "path";
 import { CollectionExplorer } from "./collection-explorer";
 import { HttpClient } from "./http/Agent";
 import { JSONRequestInterceptor } from "./http/interceptors/json/request.interceptor";
-import { JSONResponseInterceptor } from "./http/interceptors/json/response.interceptor";
 import { CommandRegistry } from "./command-registry";
 import { Request } from "./types/request-file";
 import { VarsRequestInterceptor } from "./http/interceptors/vars/request.interceptor";
 import { RequestView } from "./views/RequestView";
 import { ResponseView } from "./views/ResponseView";
 import { SingletonContainer } from "./views/SingletonContainer";
+import { TimeRequestInterceptor } from "./http/interceptors/time/request.interceptor";
+import { TimeResponseInterceptor } from "./http/interceptors/time/response.interceptor";
+import { TextResponseInterceptor } from "./http/interceptors/text/response.interceptor";
 
 export function activate(context: vscode.ExtensionContext) {
   const client = new HttpClient();
 
   client.interceptors.request.use(new JSONRequestInterceptor());
-  client.interceptors.response.use(new JSONResponseInterceptor());
   client.interceptors.request.use(new VarsRequestInterceptor());
+  client.interceptors.request.use(new TimeRequestInterceptor());
+  client.interceptors.response.use(new TimeResponseInterceptor());
+  client.interceptors.response.use(new TextResponseInterceptor());
 
   const assetsRoot = vscode.Uri.file(join(context.extensionPath, "www"));
   const commands = new CommandRegistry();
@@ -28,11 +32,16 @@ export function activate(context: vscode.ExtensionContext) {
         title: "Requisitando...",
       },
       async () => {
-        const responsePanel = SingletonContainer.get(ResponseView);
-        const res = await client.request(request);
+        try {
+          const responsePanel = SingletonContainer.get(ResponseView);
+          const res = await client.request(request);
+          console.log("response", res);
 
-        responsePanel.reveal(vscode.ViewColumn.Two);
-        responsePanel.webview.postMessage({ name: "response", args: res });
+          responsePanel.reveal(vscode.ViewColumn.Two);
+          responsePanel.webview.postMessage({ name: "response", args: res });
+        } catch (error) {
+          console.log(error);
+        }
       }
     );
   });

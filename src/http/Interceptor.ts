@@ -39,10 +39,18 @@ export class HttpInterceptorSet<
     return initialValue;
   }
 
+  async canActivate(interceptor: HttpInterceptor<T>, data: T) {
+    if (interceptor.canActivate) {
+      return interceptor.canActivate(data);
+    }
+
+    return true;
+  }
+
   prepare(data: T) {
     return this.accumulate(async (interceptor, data) => {
-      if ((await interceptor.canActivate!(data)) ?? true) {
-        return interceptor.prepare!(data) ?? data;
+      if (interceptor.prepare && (await this.canActivate(interceptor, data))) {
+        return interceptor.prepare(data) ?? data;
       }
       return data;
     }, data);
@@ -50,11 +58,8 @@ export class HttpInterceptorSet<
 
   handler(data: T) {
     return this.accumulate(async (interceptor, data) => {
-      if (
-        interceptor.handler &&
-        ((await interceptor.canActivate!(data)) ?? true)
-      ) {
-        return interceptor.handler!(data) ?? data;
+      if (interceptor.handler && (await this.canActivate(interceptor, data))) {
+        return interceptor.handler(data) ?? data;
       }
       return data;
     }, data);

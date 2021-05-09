@@ -2,51 +2,63 @@
   <div></div>
 </template>
 
-<script lang="js">
+
+<script lang="ts">
 // Main CSS
-import 'codemirror/lib/codemirror.css'
+import "codemirror/lib/codemirror.css";
 
 // Addons CSS
-import 'codemirror/addon/fold/foldgutter.css'
+import "codemirror/addon/fold/foldgutter.css";
 
 // Addons
-import 'codemirror/addon/fold/foldcode'
-import 'codemirror/addon/fold/foldgutter'
-import 'codemirror/addon/fold/brace-fold'
-import 'codemirror/addon/fold/xml-fold'
-import 'codemirror/addon/fold/indent-fold'
-import 'codemirror/addon/fold/comment-fold'
-import 'codemirror/addon/hint/show-hint'
+import "codemirror/addon/fold/foldcode";
+import "codemirror/addon/fold/foldgutter";
+import "codemirror/addon/fold/brace-fold";
+import "codemirror/addon/fold/xml-fold";
+import "codemirror/addon/fold/indent-fold";
+import "codemirror/addon/fold/comment-fold";
+import "codemirror/addon/hint/show-hint";
 
 // Modes
-import 'codemirror/mode/javascript/javascript'
-import 'codemirror/mode/xml/xml'
-import 'codemirror/mode/css/css'
-import 'codemirror/mode/htmlmixed/htmlmixed'
+import "codemirror/mode/javascript/javascript";
+import "codemirror/mode/xml/xml";
+import "codemirror/mode/css/css";
+import "codemirror/mode/htmlmixed/htmlmixed";
 
 import CM from "codemirror";
 
-export default {
-  props: ["value"],
-  data() {
-    return {
-      cm: null,
-    };
-  },
-  mounted() {
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
+
+@Component
+export default class RCodeMirror extends Vue {
+  @Prop(String) value!: string;
+  @Prop(String) mode!: string;
+
+  @Watch("value")
+  public setValue(value: string): void {
+    if (this.cm) {
+      this.cm.getDoc().setValue(value);
+    }
+  }
+
+  public cm: CM.Editor | null = null;
+
+  public mounted(): void {
     this.cm = CM(this.$el, {
-        mode: "javascript",
-        theme: 'vscode-dark',
-        value: this.value,
-        lineWrapping: true,
-        readOnly: true,
-        foldGutter: true,
-        lineNumbers: true,
-        gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
+      mode: this.mode,
+      theme: "vscode-dark",
+      value: this.value,
+      lineWrapping: true,
+      readOnly: true,
+      foldGutter: true,
+      lineNumbers: true,
+      gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
     });
-  },
-};
+  }
+}
 </script>
+
+
 <style>
 /**
     *	@package    vscode-dark theme
@@ -77,7 +89,7 @@ export default {
 }
 .cm-s-vscode-dark span.cm-variable-3,
 .cm-s-vscode-dark span.cm-type {
-  color: #A9B7C6;
+  color: #a9b7c6;
 }
 .cm-s-vscode-dark span.cm-property {
   color: var(--vscode-symbolIcon-propertyForeground);
@@ -89,10 +101,10 @@ export default {
   color: var(--vscode-debugTokenExpression-string);
 }
 .cm-s-vscode-dark span.cm-string-2 {
-  color: #6A8759;
+  color: #6a8759;
 }
 .cm-s-vscode-dark span.cm-comment {
-  color: #6A9955;
+  color: #6a9955;
 }
 .cm-s-vscode-dark span.cm-link {
   color: var(--vscode-textLink-foreground);
@@ -124,7 +136,7 @@ export default {
   border-left: 1px solid #bebebe;
 }
 .CodeMirror-activeline-background {
-  background: #3A3A3A;
+  background: #3a3a3a;
 }
 .cm-s-vscode-dark div.CodeMirror-selected {
   background: #1e496c;
@@ -136,7 +148,7 @@ export default {
 }
 
 .cm-s-vscode-dark span.cm-builtin {
-  color: #A9B7C6;
+  color: #a9b7c6;
 }
 .cm-s-vscode-dark {
   font-family: var(--vscode-editor-font-family);

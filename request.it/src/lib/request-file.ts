@@ -1,5 +1,4 @@
 import { RequestAuthOAuth2 } from "./oauth";
-import { ContentType } from "./request-data";
 
 export type RequestMethod =
   | "GET"
@@ -23,9 +22,10 @@ export interface Request {
   auth?: RequestAuth;
   followRedirects?: boolean;
   timeout?: number;
-  contentType?: ContentType;
+  contentType?: string;
   body?: any;
   vars?: any;
+  maxRedirects?: number;
 }
 
 export interface RequestFile extends Request {

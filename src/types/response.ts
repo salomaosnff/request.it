@@ -1,11 +1,11 @@
-import { ContentType } from "./request-data";
-import { Headers } from "./request-file";
+import { Headers, Request } from "./request-file";
 
 export interface Response {
   headers: Headers;
   status: number;
   statusText: string;
-  contentType: ContentType;
+  contentType: string;
   body: any;
   data: any;
+  request?: Request;
 }

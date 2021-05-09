@@ -9,8 +9,8 @@ import RequestFormHeader from "../views/request/Header.vue";
 import RequestFormDocs from "../views/request/Docs.vue";
 import Response from "../views/response.vue";
 
-import ResponseBodyView from '../views/response/body.vue'
-import ResponseHeadersView from '../views/response/headers.vue'
+import ResponseBodyView from "../views/response/body.vue";
+import ResponseHeadersView from "../views/response/headers.vue";
 
 Vue.use(VueRouter);
 
@@ -25,6 +25,7 @@ const routes: Array<RouteConfig> = [
     name: "Request",
     component: RequestForm,
     children: [
+      { path: "", redirect: "body" },
       { path: "body", component: RequestFormBody },
       { path: "auth", component: RequestFormAuth },
       { path: "query", component: RequestFormQuery },
@@ -37,6 +38,7 @@ const routes: Array<RouteConfig> = [
     name: "Response",
     component: Response,
     children: [
+      { path: "", redirect: "body" },
       { path: "body", component: ResponseBodyView },
       { path: "header", component: ResponseHeadersView },
     ],
