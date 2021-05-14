@@ -1,22 +1,19 @@
 <template>
-    <table class="r-table">
-        <thead>
-            <tr>
-                <th>Nome</th>
-                <th>Valor</th>
-                <th>Descrição</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-for="i in 10" :key="i">
-                <td>Nome {{ i }}</td>
-                <td>Valor {{ i }}</td>
-                <td>Descrição {{ i }}</td>
-            </tr>
-        </tbody>
-    </table>
+  <r-dictionary
+    :value="request.headers"
+    @input="$emit('update:request', { ...request, headers: $event })"
+  ></r-dictionary>
 </template>
 
-<style>
+<script lang="ts">
+import { Request } from "@/lib/request-file";
+import { Component, Prop, Vue } from "vue-property-decorator";
+import RDictionary from "@/components/dictonary.vue";
 
-</style>
+@Component({
+  components: { RDictionary },
+})
+export default class RRequestHeader extends Vue {
+  @Prop(Object) public request!: Request;
+}
+</script>

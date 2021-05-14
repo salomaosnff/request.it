@@ -1,5 +1,11 @@
 <template>
-  <input type="text" class="r-input" v-model="currentValue" />
+  <input
+    v-model="currentValue"
+    type="text"
+    class="r-input"
+    @blur="$emit('blur', $event)"
+    @focus="$emit('focus', $event)"
+  />
 </template>
 
 <script lang="ts">

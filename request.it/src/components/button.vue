@@ -1,8 +1,14 @@
 <template>
-  <button :class="['r-button', {
-    'r-button--block': block,
-    'r-button--secondary': secondary,
-  }]">
+  <button
+    v-on="$listeners"
+    :class="[
+      'r-button',
+      {
+        'r-button--block': block,
+        'r-button--secondary': secondary,
+      },
+    ]"
+  >
     <slot></slot>
   </button>
 </template>
@@ -43,9 +49,9 @@ import { Component, Vue, Prop } from "vue-property-decorator";
 @Component
 export default class extends Vue {
   @Prop(Boolean)
-  secondary !: boolean
+  secondary!: boolean;
 
   @Prop(Boolean)
-  block !: boolean
+  block!: boolean;
 }
 </script>

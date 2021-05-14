@@ -33,26 +33,50 @@ import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 export default class RCodeMirror extends Vue {
   @Prop(String) value!: string;
   @Prop(String) mode!: string;
+  @Prop(Boolean) readOnly!: boolean;
 
   @Watch("value")
   public setValue(value: string): void {
     if (this.cm) {
+      const cursor = this.cm.getCursor();
       this.cm.getDoc().setValue(value);
+      this.cm.setCursor(cursor);
     }
+  }
+
+  get type() {
+    const formats: Record<string, string> = {
+      html: "htmlmixed",
+      json: "javascript",
+      xml: "htmlmixed",
+      css: "css",
+      javascript: "javascript",
+    };
+
+    return formats[this.mode ?? ""] ?? this.mode;
+  }
+
+  @Watch("type")
+  public onChangeType(mode: string): void {
+    this.cm?.setOption("mode", mode);
   }
 
   public cm: CM.Editor | null = null;
 
   public mounted(): void {
     this.cm = CM(this.$el, {
-      mode: this.mode,
+      mode: this.type,
       theme: "vscode-dark",
       value: this.value,
       lineWrapping: true,
-      readOnly: true,
+      readOnly: this.readOnly,
       foldGutter: true,
       lineNumbers: true,
       gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
+    });
+
+    this.cm.on("inputRead", () => {
+      this.$emit("input", this.cm?.getDoc().getValue());
     });
   }
 }

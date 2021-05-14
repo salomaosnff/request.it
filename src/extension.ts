@@ -12,6 +12,7 @@ import { SingletonContainer } from "./views/SingletonContainer";
 import { TimeRequestInterceptor } from "./http/interceptors/time/request.interceptor";
 import { TimeResponseInterceptor } from "./http/interceptors/time/response.interceptor";
 import { TextResponseInterceptor } from "./http/interceptors/text/response.interceptor";
+import { FormRequestInterceptor } from "./http/interceptors/form/request.interceptor";
 
 export function activate(context: vscode.ExtensionContext) {
   const client = new HttpClient();
@@ -19,6 +20,7 @@ export function activate(context: vscode.ExtensionContext) {
   client.interceptors.request.use(new JSONRequestInterceptor());
   client.interceptors.request.use(new VarsRequestInterceptor());
   client.interceptors.request.use(new TimeRequestInterceptor());
+  client.interceptors.request.use(new FormRequestInterceptor());
   client.interceptors.response.use(new TimeResponseInterceptor());
   client.interceptors.response.use(new TextResponseInterceptor());
 

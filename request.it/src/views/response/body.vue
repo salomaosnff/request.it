@@ -6,8 +6,9 @@
     </label>
     <r-code-mirror
       class="r-response-body__code"
-      :mode="responseType"
+      :mode="response.contentType"
       :value="responseString"
+      :readOnly="true"
     />
   </div>
   <h1 v-else>Nenhuma resposta</h1>
@@ -54,20 +55,6 @@ export default class ResponseBodyView extends Vue {
     }
 
     return this.response.data;
-  }
-
-  get responseType(): string | null {
-    const formats: Record<string, string> = {
-      html: "htmlmixed",
-      json: "javascript",
-      xml: "htmlmixed",
-      css: "css",
-      javascript: "javascript",
-    };
-
-    console.log("type", this.response?.contentType);
-
-    return formats[this.response?.contentType ?? ""];
   }
 }
 </script>

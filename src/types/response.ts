@@ -8,4 +8,5 @@ export interface Response {
   body: any;
   data: any;
   request?: Request;
+  raw?: string;
 }

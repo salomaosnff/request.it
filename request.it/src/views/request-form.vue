@@ -15,6 +15,10 @@
       <r-button>Send</r-button>
     </form>
 
+    <pre>
+      {{ requestNormalized }}
+    </pre>
+
     <div class="r-tab-group">
       <r-tab to="/request/body"> Body </r-tab>
       <r-tab to="/request/auth"> Auth </r-tab>
@@ -23,7 +27,7 @@
       <r-tab to="/request/docs"> Docs </r-tab>
     </div>
 
-    <router-view></router-view>
+    <router-view :request.sync="requestNormalized"></router-view>
   </div>
 </template>
 
@@ -48,7 +52,7 @@
 </style>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Watch } from "vue-property-decorator";
 import { Command } from "@/lib/command";
 import { Request, RequestMethod } from "@/lib/request-file";
 import RInput from "@/components/input.vue";
@@ -60,13 +64,40 @@ import RTab from "@/components/tab-link.vue";
 })
 export default class RequestForm extends Vue {
   public request: Request = {
-    url: "https://api.pubby.club/rooms/browser",
+    url: "https://api.pubby.club/rooms/browser?sallon=gay",
     method: "GET",
-    headers: {},
+    headers: {
+      "Content-Type": ["application/json", "text/html"],
+    },
     query: {},
     followRedirects: true,
     maxRedirects: 1,
+    body: {},
   };
+
+  public getQuery(url: string): Record<string, any> {
+    const parsedUrl = new URL(url);
+    const keys = new Set(parsedUrl.searchParams.keys());
+
+    const query: Record<string, any> = {};
+
+    for (const key of keys) {
+      query[key] = parsedUrl.searchParams.getAll(key);
+    }
+
+    return query;
+  }
+
+  get requestNormalized() {
+    return {
+      ...this.request,
+      query: { ...this.request.query, ...this.getQuery(this.request.url) },
+    };
+  }
+
+  set requestNormalized(request: Request) {
+    this.request = request;
+  }
 
   public onSendRequest(): void {
     Command.call<Request>("request", this.request);

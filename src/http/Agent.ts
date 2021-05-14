@@ -17,6 +17,21 @@ export class HttpClient {
     response: new HttpInterceptorSet<Response>(),
   };
 
+  streamToPromise(readable: NodeJS.ReadableStream) {
+    return new Promise<Buffer>((resolve, reject) => {
+      const chunks: Buffer[] = [];
+
+      readable
+        .on("data", (chunk) => {
+          chunks.push(chunk);
+        })
+        .on("close", () => {
+          resolve(Buffer.concat(chunks));
+        })
+        .on("error", reject);
+    });
+  }
+
   request(req: Request) {
     return new Promise<Response>(async (resolve, reject) => {
       try {
@@ -24,11 +39,10 @@ export class HttpClient {
         req = await this.interceptors.request.handler(req);
 
         const url = new URL(req.url);
-        const chunks: Buffer[] = [];
         const request =
           url.protocol === "https:" ? https.request : http.request;
 
-        request(
+        const reqStream = request(
           url,
           {
             method: req.method,
@@ -50,30 +64,31 @@ export class HttpClient {
               );
             }
 
-            stream
-              .on("data", (chunk) => chunks.push(chunk))
-              .on("close", async () => {
-                let res = {
-                  headers: stream.headers,
-                  status: stream.statusCode ?? 0,
-                  statusText: stream.statusMessage ?? "",
-                  contentType: "binary",
-                  body: Buffer.concat(chunks),
-                  request: req,
-                } as Response;
+            let res = {
+              headers: stream.headers,
+              status: stream.statusCode ?? 0,
+              statusText: stream.statusMessage ?? "",
+              contentType: "binary",
+              body: Buffer.alloc(0),
+              request: req,
+            } as Response;
 
+            this.streamToPromise(stream)
+              .then(async (body) => {
                 try {
+                  res.body = body;
                   res = await this.interceptors.response.prepare(res);
                   res = await this.interceptors.response.handler(res);
-
                   resolve(res);
                 } catch (err) {
                   reject(err);
                 }
               })
-              .on("error", reject);
+              .catch(reject);
           }
-        ).end(req.body);
+        );
+
+        reqStream.end(req.body);
       } catch (err) {
         reject(err);
       }
