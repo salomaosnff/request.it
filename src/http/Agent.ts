@@ -88,7 +88,8 @@ export class HttpClient {
           }
         );
 
-        reqStream.end(req.body);
+        reqStream.write(req.body);
+        reqStream.end();
       } catch (err) {
         reject(err);
       }

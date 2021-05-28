@@ -13,6 +13,7 @@ import { TimeRequestInterceptor } from "./http/interceptors/time/request.interce
 import { TimeResponseInterceptor } from "./http/interceptors/time/response.interceptor";
 import { TextResponseInterceptor } from "./http/interceptors/text/response.interceptor";
 import { FormRequestInterceptor } from "./http/interceptors/form/request.interceptor";
+import { FormData } from "./types/form-data";
 
 export function activate(context: vscode.ExtensionContext) {
   const client = new HttpClient();
@@ -36,6 +37,10 @@ export function activate(context: vscode.ExtensionContext) {
       async () => {
         try {
           const responsePanel = SingletonContainer.get(ResponseView);
+          request.url = "http://localhost:3000/leads/teste";
+          request.method = "POST";
+          request.contentType = "multipart";
+          request.body = FormData.from({ xxx: "eqwe" });
           const res = await client.request(request);
           console.log("response", res);
 
