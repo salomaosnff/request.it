@@ -37,10 +37,10 @@ export function activate(context: vscode.ExtensionContext) {
       async () => {
         try {
           const responsePanel = SingletonContainer.get(ResponseView);
-          request.url = "http://localhost:3000/leads/teste";
+          request.url = "https://httpbin.org/post";
           request.method = "POST";
           request.contentType = "multipart";
-          request.body = FormData.from({ xxx: "eqwe" });
+          request.body = FormData.from({ a: "1" });
           const res = await client.request(request);
           console.log("response", res);
 

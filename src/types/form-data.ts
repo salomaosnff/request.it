@@ -23,7 +23,7 @@ export class File {
 }
 
 export class FormData {
-  public boundary = "----WebKitFormBoundary7MA4YWxkTrZu0gW";
+  public boundary = `--${Date.now().toString(2)}`;
   private _entries: FormDataEntry[] = [];
 
   static from(form: Record<string, FormDataValue | FormDataValue[]>) {
@@ -107,32 +107,35 @@ export class FormData {
   }
 
   public toBuffer() {
-    const chunks: Buffer[] = [Buffer.from(this.boundary + breakLine)];
+    const separator = `--${this.boundary}`;
+    const chunks: Buffer[] = [Buffer.from(separator + breakLine)];
 
-    this.forEach((name, value) => {
-      console.log("name", name);
-      console.log("value", value);
+    this.forEach((name, value, i) => {
       let chunk: Buffer;
 
       if (value instanceof File) {
         chunk = Buffer.from(
-          `Content-Disposition: form-data; name="${name}"${breakLine}` +
-            // `content-type: ${value.type}\n` +
-            // `content-transfer-encoding: quoted-printable\n` +
+          `Content-Disposition: form-data; name="${name}"` +
+            breakLine +
+            breakLine +
             value.data +
-            "\n" +
-            this.boundary
+            breakLine +
+            separator
         );
       } else {
         console.log("caiu no else");
         chunk = Buffer.from(
-          `Content-Disposition: form-data; name="${name}"${breakLine}${breakLine}` +
-            // "content-type: text/plain;charset=windows-1250\n" +
-            // `content-transfer-encoding: quoted-printable\n\n` +
-            String(value) +
-            "\n" +
-            this.boundary
+          `Content-Disposition: form-data; name="${name}"`+
+          breakLine +
+          breakLine +
+          String(value) +
+          breakLine +
+          separator
         );
+      }
+
+      if (i === this._entries.length - 1) {
+        chunk = Buffer.concat([chunk, Buffer.from('--')]);
       }
 
       chunks.push(chunk);
